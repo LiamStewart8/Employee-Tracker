@@ -23,8 +23,8 @@ const startTracking = () => {
             message: 'What would you like to do?',
             choices: [
                 'View All Employees',
-                'View All Employee by Departments',
-                'View All Employee by Roles',
+                'View All Departments',
+                'View All Roles',
                 'Add Employee',
                 'Add Department',
                 'Add Role',
@@ -37,11 +37,11 @@ const startTracking = () => {
                 case 'View All Employees':
                     viewAllEmployees();
                     break;
-                case 'View All Employee by Departments':
-                    viewEmployeeDepartments();
+                case 'View All Departments':
+                    viewDepartments();
                     break;
-                case 'View All Employee by Roles':
-                    viewEmployeeRoles();
+                case 'View All Roles':
+                    viewRoles();
                     break;
                 case 'Add Employee':
                     addEmployee();
@@ -61,10 +61,10 @@ const startTracking = () => {
             }
         })
 };
-//View all employees
+// View all employees
 const viewAllEmployees = () => {
     let query =
-    'SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, employee.manager_id ';
+    'SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, employee.manager_id AS manager ';
         query += 'FROM ((employee ';
         query += 'INNER JOIN role ON employee.role_id = role.id) ';
         query += 'INNER JOIN department ON role.department_id = department.id)';
@@ -74,10 +74,61 @@ const viewAllEmployees = () => {
         startTracking();
     });
 };
-// View all employees by department
-const viewEmployeeDepartments = () => {
-        inquirer
-            .prompt ({
 
-            })
+// View all departments
+const viewDepartments = () => {
+    let query = 
+    'SELECT * FROM department';
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startTracking();
+    });
 }
+
+// View all roles
+const viewRoles = () => {
+    let query = 
+    'SELECT * FROM role';
+    connection.query(query, (err, res) => {
+        if (err) throw err;
+        console.table(res);
+        startTracking();
+    });
+}
+
+
+// const addEmployee = () => {
+//     inquirer
+//         .prompt ({
+//             name: 'firstname',
+//             type: 'input',
+//             message: "What is the employee's first name?",
+//         },
+//         {
+//             name: 'lastname',
+//             type: 'input',
+//             message: "What is the employee's last name?",
+//         },
+//         {
+//             name: 'role',
+//             type: 'list',
+//             message: "What is the employee's role?",
+//             choices: [
+//                 'Front-End Developer',
+//                 'Salesperson'
+//             ],
+//         },
+//         {
+//             name: 'manager',
+//             type: 'list',
+//             message: "Who is the employee's manager?",
+//             choices: [
+//                 'John Doe',
+//                 'Jane Doe'
+//             ],
+//         },)
+//         .then (function ())
+// }
+
+
