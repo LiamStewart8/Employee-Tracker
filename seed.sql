@@ -58,7 +58,3 @@ VALUES ("Jane", "Doe", 3, null);
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Kevin", "Johnson", 4, 3);
 
-
-
-
-
