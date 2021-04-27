@@ -54,7 +54,7 @@ const startTracking = () => {
                 case 'Add Role':
                     addRole();
                     break;
-                case 'Update Employee Role':
+                case 'Update Role':
                     updateRole();
                     break;
                 case "Update an employee's role":
