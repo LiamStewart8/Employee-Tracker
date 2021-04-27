@@ -28,7 +28,9 @@ const startTracking = () => {
                 'Add Employee',
                 'Add Department',
                 'Add Role',
-                'Update Employee Role',
+                'Update Role',
+                "Update an employee's role",
+                'Delete department',
                 'EXIT'
             ],
         })
@@ -55,6 +57,12 @@ const startTracking = () => {
                 case 'Update Employee Role':
                     updateRole();
                     break;
+                case "Update an employee's role":
+                    updateEmployeeRole();
+                    break;
+                case 'Delete department' :
+                    deleteDepartment();
+                    break;
                 case 'EXIT':
                     connection.end();
                     console.log("Success!");
@@ -64,7 +72,7 @@ const startTracking = () => {
 // View all employees
 const viewAllEmployees = () => {
     let query =
-        'SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, employee.manager_id AS manager ';
+        'SELECT employee.id, employee.first_name, employee.last_name, role.title, role.salary, department.name AS department, employee.manager_id AS manager ';
     query += 'FROM ((employee ';
     query += 'INNER JOIN role ON employee.role_id = role.id) ';
     query += 'INNER JOIN department ON role.department_id = department.id)';
@@ -100,7 +108,7 @@ const viewRoles = () => {
 // Add employee's
 const addEmployee = () => {
     inquirer
-        .prompt({
+        .prompt([{
             name: 'firstname',
             type: 'input',
             message: "What is the employee's first name?",
@@ -119,7 +127,7 @@ const addEmployee = () => {
                 name: 'manager',
                 type: 'input',
                 message: "What is the employee's manager id?",
-            })
+            }])
         .then((answer) => {
             connection.query('INSERT INTO employee SET ?', {
                 first_name: answer.firstname,
@@ -138,7 +146,7 @@ const addEmployee = () => {
 const addDepartment = () => {
     inquirer
         .prompt({
-            name: 'newdepartment',
+            name: 'name',
             type: 'input',
             message: 'What is the name of the department you would like to add?'
         })
@@ -186,6 +194,96 @@ const addRole = () => {
 }
 
 
+
 const updateRole = () => {
-    
+    inquirer
+    .prompt([{
+        name: 'title',
+        type: 'input',
+        message: 'What role would you like to update?',
+        },
+        {
+        name: 'salary',
+        type: 'input',
+        message: 'What would you like the new salary to be?',
+        },
+        ])
+        .then((answer) => {
+    const query = connection.query(
+        'UPDATE role SET ? WHERE ?',
+            [{
+                title: answer.title,
+            },
+            {
+                salary: answer.salary,
+            },],
+            (err, res) => {
+                if(err) throw err;
+                console.log('Role Updated!');
+                startTracking();
+            })
+    })
 }
+
+const updateEmployeeRole = () => {
+    inquirer
+    .prompt([{
+        name: 'id',
+        type: 'input',
+        message: 'What is the id of the employee you would like to update?',
+    },
+    {
+        name: 'role_id',
+        type: 'input',
+        message: 'What is the id of the role you would like to assign them?'
+    },
+    ])
+    .then((answer) => {
+        const query = connection.query(
+            'UPDATE employee SET ? WHERE ?',
+            [{
+                id: answer.id,
+            },
+            {
+                role_id: answer.role_id,
+            },],
+            (err, res) => {
+                if(err) throw err;
+                console.log('Role Updated!');
+                startTracking();
+            }
+        )
+    })
+}
+
+const deleteDepartment = () => {
+    inquirer
+    .prompt([{
+        name: 'id',
+        type: 'input',
+        message: 'What is the id of the department you would like to delete?',
+    },])
+    .then((answer) => {
+        connection.query('DELETE FROM department WHERE ?', {
+            id: answer.id,
+        }, (err, res) => {
+            if (err) throw err;
+            console.log('Department deleted!');
+            startTracking();
+        })
+    })
+}
+
+// const deleteRole = () => {
+//     inquirer
+//     .prompt([{
+//         name: 'title',
+//         type: 'input',
+//         message: 'What is the id of role you would like to delete?',
+//     },])
+//     .then((answer) => {
+//         connection.query('DELETE FROM role WHERE ?', {
+            
+//         })
+//     })
+// }
