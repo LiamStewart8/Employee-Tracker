@@ -274,16 +274,3 @@ const deleteDepartment = () => {
     })
 }
 
-// const deleteRole = () => {
-//     inquirer
-//     .prompt([{
-//         name: 'title',
-//         type: 'input',
-//         message: 'What is the id of role you would like to delete?',
-//     },])
-//     .then((answer) => {
-//         connection.query('DELETE FROM role WHERE ?', {
-            
-//         })
-//     })
-// }
